@@ -1,7 +1,7 @@
-import Image from 'next/image'
+import Wrapper from "@/components/Wrapper";
 
 export default function Home() {
   return (
-  <main></main>
+  <main><Wrapper className="bg-red-500">hello</Wrapper></main>
   )
 }
