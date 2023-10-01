@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 import UploadBtn from './UploadBtn'
 import { trpc } from '@/app/_trpc/client'
 import { Ghost, Loader2, MessageSquare, Plus, Trash } from 'lucide-react'
@@ -11,11 +11,18 @@ interface DashboardProps {}
 
 const Dashboard = ({}: DashboardProps) => {
   const refresh= trpc.useContext()
+  const [currentfile, setCurrentFile] = useState<string | null>(null)
   const { data: pdfs, isLoading } = trpc.getUserFiles.useQuery()
   const {mutate:deleteFile}= trpc.deleteFile.useMutation({
     onSuccess: () => {
       refresh.getUserFiles.invalidate()
     },
+    onMutate({id}){
+      setCurrentFile(id)
+    },
+    onSettled(){
+      setCurrentFile(null)
+    }
   })
   return (
     <main className='mx-auto max-w-7xl md:p-10'>
@@ -71,11 +78,11 @@ const Dashboard = ({}: DashboardProps) => {
                     className='w-full'
                     variant='destructive'
                   >
-                    {/* {currentlyDeletingFile === file.id ? (
+                    {currentfile === file.id ? (
                       <Loader2 className='h-4 w-4 animate-spin' />
                     ) : (
                       <Trash className='h-4 w-4' />
-                    )} */}
+                    )}
                   </Button>
                 </div>
               </li>
