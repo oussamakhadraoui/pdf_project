@@ -10,7 +10,13 @@ import Link from 'next/link'
 interface DashboardProps {}
 
 const Dashboard = ({}: DashboardProps) => {
+  const refresh= trpc.useContext()
   const { data: pdfs, isLoading } = trpc.getUserFiles.useQuery()
+  const {mutate:deleteFile}= trpc.deleteFile.useMutation({
+    onSuccess: () => {
+      refresh.getUserFiles.invalidate()
+    },
+  })
   return (
     <main className='mx-auto max-w-7xl md:p-10'>
       <div className='mt-8 flex flex-col items-start justify-between gap-4 border-b border-gray-200 pb-5 sm:flex-row sm:items-center sm:gap-0'>
@@ -65,11 +71,11 @@ const Dashboard = ({}: DashboardProps) => {
                     className='w-full'
                     variant='destructive'
                   >
-                    {currentlyDeletingFile === file.id ? (
+                    {/* {currentlyDeletingFile === file.id ? (
                       <Loader2 className='h-4 w-4 animate-spin' />
                     ) : (
                       <Trash className='h-4 w-4' />
-                    )}
+                    )} */}
                   </Button>
                 </div>
               </li>
