@@ -65,7 +65,9 @@ const PDFRender = ({ url }: PDFRenderProps) => {
             disabled={currentPage <= 1}
             onClick={() => {
               setCurrentPage((prev) => (prev - 1 > 1 ? prev - 1 : 1))
+              setValue('page', String(currentPage - 1))
             }}
+            
           >
             <ChevronDown className='h-4 w-4' />
           </Button>
@@ -95,6 +97,7 @@ const PDFRender = ({ url }: PDFRenderProps) => {
               setCurrentPage((prev) =>
                 prev + 1 > numPages! ? numPages! : prev + 1
               )
+              setValue('page', String(currentPage + 1))
             }}
           >
             <ChevronUp className='h-4 w-4' />
