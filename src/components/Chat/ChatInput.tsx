@@ -1,10 +1,10 @@
 import React from 'react'
 
 interface ChatInputProps {
-  
+  disabled:boolean
 }
 
-const ChatInput = ({}: ChatInputProps) => {
+const ChatInput = ({disabled}: ChatInputProps) => {
   return <div>ChatInput</div>
 }
 
