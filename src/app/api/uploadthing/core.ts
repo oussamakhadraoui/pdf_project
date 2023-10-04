@@ -4,6 +4,7 @@ import { createUploadthing, type FileRouter } from 'uploadthing/next'
 import { PDFLoader } from 'langchain/document_loaders/fs/pdf'
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai'
 import { getPineconeClient } from '@/lib/picone'
+import { PineconeStore } from 'langchain/vectorstores/pinecone'
 const f = createUploadthing()
 
 const auth = (req: Request) => ({ id: 'fakeId' }) // Fake auth function
@@ -47,6 +48,19 @@ export const ourFileRouter = {
           const embeddings = new OpenAIEmbeddings({
             openAIApiKey: process.env.OPENAI_API_KEY,
           })
+            await PineconeStore.fromDocuments(pageLevelDocs, embeddings, {
+              pineconeIndex,
+              namespace: createFile.id,
+            })
+
+            await db.file.update({
+              data: {
+                uploadStatus: 'SUCCESS',
+              },
+              where: {
+                id: createFile.id,
+              },
+            })
       } catch (error) {}
       console.log('file url', file.url)
     }),
