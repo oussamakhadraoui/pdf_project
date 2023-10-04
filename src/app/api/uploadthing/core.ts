@@ -3,6 +3,7 @@ import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 import { createUploadthing, type FileRouter } from 'uploadthing/next'
 import { PDFLoader } from 'langchain/document_loaders/fs/pdf'
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai'
+import { getPineconeClient } from '@/lib/picone'
 const f = createUploadthing()
 
 const auth = (req: Request) => ({ id: 'fakeId' }) // Fake auth function
@@ -40,6 +41,12 @@ export const ourFileRouter = {
         const pageLevelDocs = await loader.load()
 
         const pagesAmt = pageLevelDocs.length
+          const pinecone = await getPineconeClient()
+          const pineconeIndex = pinecone.Index('gara')
+
+          const embeddings = new OpenAIEmbeddings({
+            openAIApiKey: process.env.OPENAI_API_KEY,
+          })
       } catch (error) {}
       console.log('file url', file.url)
     }),
