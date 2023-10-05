@@ -6,6 +6,7 @@ import { trpc } from '@/app/_trpc/client'
 import { ChevronLeft, Loader2, XCircle } from 'lucide-react'
 import Link from 'next/link'
 import { buttonVariants } from '../ui/button'
+import { ChatContextProvider } from './ChatContext'
 
 interface ChatWrapperProps {
   fileId: string
@@ -31,7 +32,7 @@ const ChatWrapper = ({ fileId }: ChatWrapperProps) => {
             </p>
           </div>
         </div>
-        <ChatInput disabled />
+        <ChatInput isDisabled />
       </div>
     )
   }
@@ -55,7 +56,7 @@ const ChatWrapper = ({ fileId }: ChatWrapperProps) => {
             </Link>
           </div>
         </div>
-        <ChatInput disabled />
+        <ChatInput  />
       </div>
     )
   }
@@ -69,17 +70,19 @@ const ChatWrapper = ({ fileId }: ChatWrapperProps) => {
             <p className='text-zinc-500 text-sm'>This won&apos;t take long.</p>
           </div>
         </div>
-        <ChatInput disabled />
+        <ChatInput isDisabled />
       </div>
     )
   }
   return (
-    <div className='relative min-h-full bg-zinc-50 flex divide-y divide-zinc-200 flex-col justify-between gap-2'>
-      <div className='flex-1 flex flex-col justify-between mb-28'>
-        <Messages />
+    <ChatContextProvider fileId={fileId}>
+      <div className='relative min-h-full bg-zinc-50 flex divide-y divide-zinc-200 flex-col justify-between gap-2'>
+        <div className='flex-1 flex flex-col justify-between mb-28'>
+          <Messages />
+        </div>
+        <ChatInput isDisabled={false} />
       </div>
-      <ChatInput disabled={false} />
-    </div>
+    </ChatContextProvider>
   )
 }
 
