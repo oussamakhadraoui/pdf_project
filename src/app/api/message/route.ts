@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
     const { getUser } = getKindeServerSession()
-
+console.log(body)
     const user = getUser()
     if (!user || !user.id) {
       return new Response('Unauthorized', {
@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
     const pineconeIndex = pinecone.Index('gara')
     const vectorStore = await PineconeStore.fromExistingIndex(embeddings, {
       pineconeIndex,
-      namespace: file.id,
+      // namespace: file.id,
     })
     const results = await vectorStore.similaritySearch(message, 4)
     const prevMessages = await db.message.findMany({
@@ -109,8 +109,12 @@ export async function POST(req: NextRequest) {
     })
 
     return new StreamingTextResponse(stream)
+   
   } catch (error) {
-    console.error(error)
+    if(error instanceof Error) {
+      console.log(error.message)
+    }
+
     return new Response('Something went wrong', {
       status: 500,
     })
