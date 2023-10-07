@@ -1,6 +1,8 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useRef, useState } from 'react'
 import { useToast } from '../ui/use-toast'
 import { useMutation } from '@tanstack/react-query'
+import { trpc } from '@/app/_trpc/client'
+import { INFINITE_QUERY_LIMIT } from '@/config/infinity-query'
 
 interface ChatContextProps {
   addMessage: () => void
@@ -27,9 +29,10 @@ export const ChatContextProvider = ({
   const [message, setMessage] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { toast } = useToast()
-
+  const backUpMsg = useRef('')
+  const utils = trpc.useContext()
   const { mutate: sendMessage } = useMutation({
-    mutationFn: async ({ message }:{message: string}) => {
+    mutationFn: async ({ message }: { message: string }) => {
       const response = await fetch('/api/message', {
         method: 'POST',
         body: JSON.stringify({ fileId, message }),
@@ -38,6 +41,46 @@ export const ChatContextProvider = ({
         throw new Error('Something wrong in sending message.')
       }
       return response.body
+    },
+    onMutate: async () => {
+      backUpMsg.current = message
+      setMessage('')
+      await utils.getFileMessages.cancel()
+      const prevMsg = utils.getFileMessages.getInfiniteData()
+      // {fileId}
+
+      // this code below moves all the old pages up and put the new message bellow
+      utils.getFileMessages.setInfiniteData(
+        { fileId, limit: INFINITE_QUERY_LIMIT },
+        (old) => {
+          if (!old) {
+            return { pages: [], pageParams: [] }
+          }
+
+          let newPages = [...old.pages]
+          let latestPage = newPages[0]!
+          latestPage.messages = [
+            {
+              createdAt: new Date().toISOString(),
+              id: crypto.randomUUID(),
+              text: message,
+              isUserMessage: true,
+            },
+            ...latestPage.messages,
+          ]
+          newPages[0] = latestPage
+          return {
+            ...old,
+            pages: newPages,
+          }
+        }
+      )
+      setIsLoading(true)
+            return {
+              previousMessages:
+                prevMsg?.pages.flatMap((page) => page.messages) ?? [],
+            }
+
     },
   })
   const addMessage = () => {
