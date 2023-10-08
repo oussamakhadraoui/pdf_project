@@ -18,7 +18,7 @@ const Navbar = ({}: NavbarProps) => {
           <Link href='/' className='flex z-40 font-semibold'>
             <span>O.K</span>
           </Link>
-          {/* mobile */}
+          {/* mobile viewer*/}
           <div className='hidden items-center space-x-4 sm:flex'>
             {!user ? (
               <>
