@@ -71,7 +71,7 @@ export const ourFileRouter = {
             },
           })
       }
-      console.log('file url', file.url)
+    
     }),
 } satisfies FileRouter
 

@@ -12,7 +12,6 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
     const { getUser } = getKindeServerSession()
-    console.log(body)
     const user = getUser()
     if (!user || !user.id) {
       return new Response('Unauthorized', {
@@ -93,7 +92,7 @@ export async function POST(req: NextRequest) {
         },
       ],
     })
-    console.log(response)
+   
     // @ts-ignore
     const stream = OpenAIStream(response, {
       async onCompletion(completion) {
