@@ -23,7 +23,9 @@ const UploadDropZone = ({ isSubscribed }: { isSubscribed: boolean }) => {
     retry: true,
     retryDelay: 500,
   })
-  const { startUpload } = useUploadThing('pdfUploader')
+  const { startUpload } = useUploadThing(
+    isSubscribed ? 'proPlanUploader' : 'freePlanUploader'
+  )
   const startSimulatedProgress = () => {
     setUploadProgress(0)
 
