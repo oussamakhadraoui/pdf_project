@@ -155,9 +155,9 @@ const PDFRender = ({ url }: PDFRenderProps) => {
               }}
               onLoadError={() => {
                 toast({
-                  type: 'error',
+                  
                   variant: 'destructive',
-                  message: 'Error loading PDF please try again later.',
+                  description: 'Error loading PDF please try again later.',
                   title: 'Error Loading pdf!',
                 })
               }}

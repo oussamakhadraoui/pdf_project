@@ -52,10 +52,10 @@ const UploadDropZone = ({ isSubscribed }: { isSubscribed: boolean }) => {
           return toast({
             title: 'Error',
             description: 'Something went wrong',
-            status: 'error',
+            
             variant: 'destructive',
             duration: 3000,
-            isClosable: true,
+            
           })
         }
         const [pdfResponse] = res
@@ -64,10 +64,10 @@ const UploadDropZone = ({ isSubscribed }: { isSubscribed: boolean }) => {
           return toast({
             title: 'Error',
             description: 'Something went wrong',
-            status: 'error',
+            
             variant: 'destructive',
             duration: 3000,
-            isClosable: true,
+            
           })
         }
 

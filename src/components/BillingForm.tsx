@@ -19,7 +19,7 @@ const BillingForm = ({ subscriptionPlan }: BillingFormProps) => {
   onSuccess({url}) {
    if(url) window.location.href= url
    if(!url) {
-    toast({message:"Something went wrong!",type:"error",variant:'destructive',description:'please try again later.'})
+    toast({title:"Something went wrong!",type:"foreground",variant:'destructive',description:'please try again later.'})
    }
    
   },
